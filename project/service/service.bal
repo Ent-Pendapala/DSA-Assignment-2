@@ -48,15 +48,45 @@ service schema on new graphql:Listener(port) {
         sql:ExecutionResult result = check dbClient->execute(query);
     }
 
-    remote function addKPI(){
-
+    remote function addKPI(int employeeStaffNumber, 
+    int studentPassrate,
+    int researchOutput,
+    string supervisorOpinion,
+    string peerOpinion  ){
+        sql:ParameterizedQuery query = `INSERT INTO employee(employee_staff_number, student_passrate, research_output, supervisor_opinion, peer_opinion)
+                                  VALUES (${employeeStaffNumber}, ${studentPassrate},${researchOutput}, ${supervisorOpinion}, ${peerOpinion} )`;
+        sql:ExecutionResult result = check dbClient->execute(query);
     }
 
-    remote function deleteKPI(int employeeStaffNumber) returns string{
+    remote function deleteKPI(int employeeStaffNumber, 
+    int studentPassrate,
+    int researchOutput,
+    string supervisorOpinion,
+    string peerOpinion  ) returns string{
 
+        sql:ParameterizedQuery query = `DELETE from employee WHERE employee_staff_number = ${employeeStaffNumber}`;
+        sql:ExecutionResult result = check dbClient->execute(query);
     }
 
-    remote function updateKPI(int employeeStaffNumber) returns string{
+    remote function updateKPI(int employeeStaffNumber, 
+    int studentPassrate,
+    int researchOutput,
+    string supervisorOpinion,
+    string peerOpinion ) returns string{
+
+        sql:ParameterizedQuery query = `UPDATE employee SET name = ${employeeStaffNumber} WHERE student_passrate = ${studentPassrate}`;
+        sql:ExecutionResult result = check dbClient->execute(query);
+
+        sql:ParameterizedQuery query2 = `UPDATE employee SET name = ${employeeStaffNumber} WHERE research_output = ${researchOutput}`;
+        sql:ExecutionResult result2 = check dbClient->execute(query2);
+
+        sql:ParameterizedQuery query3 = `UPDATE employee SET name = ${employeeStaffNumber} WHERE supervisor_opinion = ${supervisorOpinion}`;
+        sql:ExecutionResult result3 = check dbClient->execute(query3);
+
+
+        sql:ParameterizedQuery query4 = `UPDATE employee SET name = ${employeeStaffNumber} WHERE peer_opinion = ${peerOpinion}`;
+        sql:ExecutionResult result4 = check dbClient->execute(query4);
+
 
     }
 

@@ -34,6 +34,10 @@ public type Employee record {|
     string role;
     int supervisorStaffNumber;
     int employeeScore;
+    string peerOpinion;
+    int studentPassrate;
+    int researchOutput;
+    string supervisorOpinion;    
 |};
 
 public type employeeAssignment record {|
