@@ -33,6 +33,7 @@ public type Employee record {|
     string department;
     string role;
     int supervisorStaffNumber;
+    int employeeScore;
 |};
 
 public type employeeAssignment record {|
