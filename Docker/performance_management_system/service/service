@@ -1,0 +1,28 @@
+# Use the Ballerina base image
+FROM ballerina/ballerina:swan-lake
+
+# Set environment variables
+ENV BALLERINA_BRE_OPTS="-Xmx512m -Xms256m"
+ENV BALLERINA_OPTS="--b7a.log.debug=true"
+ENV SERVICE_PORT=9090
+ENV DB_HOST=my-database-host
+ENV DB_PORT=5432
+ENV DB_USER=my-db-user
+ENV DB_PASSWORD=my-db-password
+ENV DB_NAME=my-db-name
+
+# Create a directory for the Ballerina service
+WORKDIR /usr/src/app
+
+# Copy the Ballerina service code and Ballerina.toml file to the container
+COPY service.bal .
+COPY Ballerina.toml .
+
+# Expose the port on which the service will run
+EXPOSE $SERVICE_PORT
+
+# Build and run the Ballerina service
+RUN bal build service.bal
+
+# Run the Ballerina service
+CMD ["bal", "run", "service.jar"]
