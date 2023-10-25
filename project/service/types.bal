@@ -9,8 +9,8 @@ type schema service object {
 };
 
 public type EmployeeGrade record {|
-    string employeeID;
-    float score;
+    string employeeStaffNumber;
+    int score;
 |};
 
 public type departmentAssignment record {|
@@ -18,30 +18,30 @@ public type departmentAssignment record {|
     string departmentName;
 |};
 
-public type departmentObjectives record {|
-    string departmentID;
-    string departmentName;
-    string objectiveName;
+public type Department record {|
+    readonly string departmentName;
+    string[] objectives;
     string description;
     float percentage;
 |};
 
-public type employee record {|
-    string employeeID;
+public type Employee record {|
+    readonly int employeeStaffNumber;
     string firstName;
     string lastName;
-    string job;
-    string departmentName;
-    int supervisorID;
+    string jobTitle;
+    string department;
+    string role;
+    int supervisorStaffNumber;
 |};
 
 public type employeeAssignment record {|
-    string employeeID;
-    string supervisorID;
+    string employeeStaffNumber;
+    string supervisorStaffNumber;
 |};
 
-public type hod record {|
-    string hodID;
+public type HOD record {|
+    readonly int hodStaffNumber;
     string firstName;
     string lastName;
     string position;
@@ -63,9 +63,12 @@ public type performanceRecord record {|
 |};
 
 public type supervisor record {|
-    string supervisorID;
+    readonly int supervisorStaffNumber;
     string firstName;
     string lastName;
-    string position;
+    string jobTitle;
+    string role;
+    int supervisorScore;
     string departmentName;
+    int[] employeeStaffNumber
 |};
