@@ -1,6 +1,6 @@
 [package]
 org = "penda"
-name = "server"
+name = "performance_manger"
 version = "0.1.0"
 distribution = "2201.8.2"
 
