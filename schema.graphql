@@ -1,0 +1,90 @@
+type User {
+  userId: ID!
+  firstName: String!
+  lastName: String!
+  jobTitle: String!
+  department: Department!
+  role: Role!
+  supervisor: User
+  performanceRecords: [PerformanceRecord]
+}
+
+enum Role {
+  HoD
+  Supervisor
+  Employee
+}
+
+type PerformanceRecord {
+  recordId: ID!
+  kpi: KPI!
+  employee: User!
+  score: Float!
+  unitType: String!
+}
+
+type KPI {
+  kpiId: ID!
+  supervisor: User!
+  name: String!
+  objectives: [DepartmentObjective]
+}
+
+type DepartmentObjective {
+  objectiveId: ID!
+  department: Department!
+  name: String!
+  description: String
+  percentage: Float!
+}
+
+type Department {
+  departmentId: ID!
+  name: String!
+  objectives: [DepartmentObjective]
+  employees: [User]
+}
+
+type Query {
+  user(userId: ID!): User
+  performanceRecord(recordId: ID!): PerformanceRecord
+  kpi(kpiId: ID!): KPI
+  departmentObjective(objectiveId: ID!): DepartmentObjective
+}
+
+type Mutation {
+  createUser(user: UserInput!): User
+  createPerformanceRecord(record: PerformanceRecordInput!): PerformanceRecord
+  createKPI(kpi: KPIInput!): KPI
+  createDepartmentObjective(
+    objective: DepartmentObjectiveInput!
+  ): DepartmentObjective
+}
+
+input UserInput {
+  firstName: String!
+  lastName: String!
+  jobTitle: String!
+  departmentId: ID!
+  roleId: Role!
+  supervisorId: ID
+}
+
+input PerformanceRecordInput {
+  kpiId: ID!
+  employeeId: ID!
+  score: Float!
+  unitType: String!
+}
+
+input KPIInput {
+  name: String!
+  supervisorId: ID!
+}
+
+input DepartmentObjectiveInput {
+  departmentId: ID!
+  name: String!
+  description: String
+  percentage: Float!
+}
