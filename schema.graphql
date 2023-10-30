@@ -1,0 +1,124 @@
+type User {
+  userId: ID!
+  firstName: String!
+  lastName: String!
+  jobTitle: String!
+  department: Department!
+  role: Role!
+  supervisor: User
+  performanceRecords: [PerformanceRecord]
+}
+
+enum Role {
+  HoD
+  Supervisor
+  Employee
+}
+
+type PerformanceRecord {
+  recordId: ID!
+  kpi: KPI!
+  employee: User!
+  score: Float!
+  unitType: UnitType!
+}
+
+enum UnitType {
+  PERCENTAGE
+  TIME
+  COUNT
+  CURRENCY
+  SCORE
+  RATIO
+  UNIT
+  DISTANCE
+}
+
+type KPI {
+  kpiId: ID!
+  supervisor: User!
+  name: String!
+  objectives: [DepartmentObjective]
+}
+
+type DepartmentObjective {
+  objectiveId: ID!
+  department: Department!
+  name: String!
+  description: String
+  percentage: Float!
+}
+
+type Department {
+  departmentId: ID!
+  name: String!
+  objectives: [DepartmentObjective]
+  employees: [User]
+}
+
+type Query {
+  user(userId: ID!): User
+  performanceRecord(recordId: ID!): PerformanceRecord
+  kpi(kpiId: ID!): KPI
+  departmentObjective(objectiveId: ID!): DepartmentObjective
+}
+
+type Mutation {
+  createUser(user: UserInput!): User
+  createPerformanceRecord(record: PerformanceRecordInput!): PerformanceRecord
+  createKPI(kpi: KPIInput!): KPI
+  createDepartmentObjective(
+    objective: DepartmentObjectiveInput!
+  ): DepartmentObjective
+
+  deleteUser(id: ID!): User
+  deleteDepartment(id: ID!): Department
+  deleteObjective(id: ID!): Objective
+  deleteKPI(id: ID!): KPI
+  deletePerformanceRecord(id: ID!): PerformanceRecord
+
+  # Update Operations
+  updateUser(id: ID!, userInput: UserInput): User
+  updateDepartment(id: ID!, departmentInput: DepartmentInput): Department
+  updateObjective(id: ID!, objectiveInput: ObjectiveInput): Objective
+  updateKPI(id: ID!, kpiInput: KPIInput): KPI
+  updatePerformanceRecord(
+    id: ID!
+    recordInput: PerformanceRecordInput
+  ): PerformanceRecord
+
+  # Assignment Operations
+  assignEmployeeToSupervisor(userId: ID!, supervisorId: ID!): User
+  assignKPItoUser(kpiId: ID!, userId: ID!): PerformanceRecord
+
+  # Grading Operations
+  gradePerformanceRecord(id: ID!, score: Float): PerformanceRecord
+}
+
+input UserInput {
+  firstName: String!
+  lastName: String!
+  jobTitle: String!
+  departmentId: ID!
+  roleId: Role!
+  supervisorId: ID
+}
+
+input PerformanceRecordInput {
+  kpiId: ID!
+  employeeId: ID!
+  score: Float!
+  unitType: String!
+}
+
+input KPIInput {
+  name: String!
+  supervisorId: ID!
+}
+
+input DepartmentObjectiveInput {
+  departmentId: ID!
+  name: String!
+  description: String
+  percentage: Float!
+}

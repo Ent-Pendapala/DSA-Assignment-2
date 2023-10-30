@@ -1,6 +1,6 @@
 [package]
 org = "penda"
-name = "server"
+name = "DSA_Assignment_2"
 version = "0.1.0"
 distribution = "2201.8.2"
 
