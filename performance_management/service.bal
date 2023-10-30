@@ -1,60 +1,22 @@
-import ballerina/io;
-import ballerinax/mysql;
+import ballerina/config;
+import ballerina/mysql;
 
-// Define database configurations
-mysql:ClientEndpointConfig dbConfig = {
-    host: "localhost",
-    port: 3306,
-    username: "root",
-    password: "canopisA88",
-    dbOptions: { useSSL: false, allowPublicKeyRetrieval: true }
+// Define a MySQL data source configuration
+mysql:DataSourceConfiguration dataSourceConfig = {
+    host: config:getAsString("database.host"),
+    port: config:getAsString("database.port"),
+    username: config:getAsString("database.username"),
+    password: config:getAsString("database.password"),
+    databaseName: config:getAsString("database.name"),
+    options: {}
 };
 
-// Create a MySQL client
-mysql:Client dbClient = new (dbConfig);
+// Create a MySQL client using the data source configuration
+mysql:Client mysqlClient = new (dataSourceConfig);
 
-// Function to insert a new user into the database
-public function insertUser(UserInput user) returns User {
-    var insertQuery = `INSERT INTO Users (firstName, lastName, jobTitle, userRole, departmentId, supervisorId)
-                       VALUES (?, ?, ?, ?, ?, ?)`;
-    var result = dbClient->executeUpdate(insertQuery, user.firstName, user.lastName, user.jobTitle, user.roleId.toString(),
-                                         user.departmentId, user.supervisorId);
-    if (result is int) {
-        // Successfully inserted, return the user object with generated userId
-        return {userId: result.toString(), ...user};
-    } else {
-        // Handle the error
-        io:println("Error: Failed to insert user - " + result.toString());
-        return ();
-    }
+function getUsers() returns User[] {
+    var query = "SELECT * FROM Users";
+    var result = mysqlClient->select(query);
+    var users = check getMappedResults(result, User);
+    return users;
 }
-
-// Function to retrieve a user by userId
-public function getUserById(int userId) returns User? {
-    var selectQuery = "SELECT * FROM Users WHERE userId = ?";
-    var result = dbClient->select(selectQuery, userId);
-    if (result is table<mysql:Record>) {
-        if (table:hasData(result)) {
-            var userRecord = table:getFirst(result);
-            User user = {
-                userId: userRecord.getInt("userId").toString(),
-                firstName: userRecord.getString("firstName"),
-                lastName: userRecord.getString("lastName"),
-                jobTitle: userRecord.getString("jobTitle"),
-                department: userRecord.getInt("departmentId").toString(),
-                role: Role.fromString(userRecord.getString("userRole")),
-                supervisor: userRecord.getInt("supervisorId").toString(),
-                performanceRecords: [] // You may fetch performance records here
-            };
-            return user;
-        } else {
-            // No data found
-            return ();
-        }
-    } else {
-        // Handle the error
-        io:println("Error: Failed to retrieve user - " + result.toString());
-        return ();
-    }
-}
-
