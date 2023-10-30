@@ -1,0 +1,79 @@
+type hod {
+  hodID: ID!
+  firstName: String!
+  lastName: String!
+  position: String!
+  departmentName: String!
+}
+
+type departmentObjectives {
+  departmentID: ID!
+  departmentName: String!
+  objectiveName: String!
+  description: String!
+  percentage: Float!
+}
+
+type employee {
+  employeeID: ID!
+  firstName: String!
+  lastName: String!
+  job: String!
+  departmentName: String!
+  supervisorID: Int!
+}
+
+type kpi {
+  kpiID: ID!
+  supervisorID: Int!
+  kpiName: String!
+  kpiValue: Int!
+}
+
+type performanceRecord {
+  performanceRecordID: ID!
+  employeeID: Int!
+  kpiID: Int!
+  employeeScore: Float!
+}
+
+type supervisor {
+  supervisorID: ID!
+  firstName: String!
+  lastName: String!
+  position: String!
+  departmentName: String!
+}
+
+type Mutation {
+  assignHodToDepartment(
+    hodID: ID!
+    departmentName: String!
+  ): departmentAssignment
+
+  assignEmployeeToSupervisor(
+    employeeID: ID!
+    supervisorID: ID!
+  ): employeeAssignment
+
+  gradeEmployeePerformance(employeeID: ID!, score: Float!): EmployeeGrade
+}
+
+type departmentAssignment {
+  hodID: ID!
+  departmentName: String!
+}
+
+type employeeAssignment {
+  employeeID: ID!
+  supervisorID: ID!
+}
+
+type Query {
+  getDepartmentalScores(departmentName: String!): Float
+}
+
+type EmployeeGrade {
+  employeeID: ID!
+  score: Float!
+}
